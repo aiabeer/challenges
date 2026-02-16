@@ -1,23 +1,34 @@
 def encode(plain_text):
-    cipher_text = ""
-    for char in plain_text:
+    # First, transform the text using Atbash cipher
+    transformed = ""
+    for char in plain_text.lower():
         if char.isalpha():
-            cipher_char = chr(122 - (ord(char.lower()) - 97))
-            cipher_text += cipher_char
+            # Atbash transformation: a(97) ↔ z(122)
+            # 122 + 97 = 219, so 219 - ord(char) gives the opposite letter
+            transformed += chr(219 - ord(char))
         elif char.isdigit():
-            cipher_text += char
-        elif char.isspace():
-            cipher_text += " "
-    return cipher_text
+            transformed += char
+        # Skip spaces and punctuation
+    
+    # Now group into chunks of 5 characters
+    grouped = []
+    for i in range(0, len(transformed), 5):
+        grouped.append(transformed[i:i+5])
+    
+    return " ".join(grouped)
+
 
 def decode(cipher_text):
+    # Remove spaces and decode
     plain_text = ""
-    for char in cipher_text:
+    # First remove all spaces from the cipher text
+    cipher_text_no_spaces = cipher_text.replace(" ", "")
+    
+    for char in cipher_text_no_spaces:
         if char.isalpha():
-            plain_char = chr(122 - (ord(char.lower()) - 97))
-            plain_text += plain_char
+            # Same transformation works both ways
+            plain_text += chr(219 - ord(char))
         elif char.isdigit():
             plain_text += char
-        elif char.isspace():
-            plain_text += " "
+    
     return plain_text
